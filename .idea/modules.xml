@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/Codigo fuente profe/Cola_Estatica/Cola_Estatica.iml" filepath="$PROJECT_DIR$/Codigo fuente profe/Cola_Estatica/Cola_Estatica.iml" />
+      <module fileurl="file://$PROJECT_DIR$/Codigo fuente profe/Cola_Prioridad_Estatica/Cola_Prioridad_Estatica.iml" filepath="$PROJECT_DIR$/Codigo fuente profe/Cola_Prioridad_Estatica/Cola_Prioridad_Estatica.iml" />
+      <module fileurl="file://$PROJECT_DIR$/Codigo fuente profe/Conjunto_Estatico/Conjunto_Estatico.iml" filepath="$PROJECT_DIR$/Codigo fuente profe/Conjunto_Estatico/Conjunto_Estatico.iml" />
+      <module fileurl="file://$PROJECT_DIR$/Codigo fuente profe/Diccionario_Multiple_Estatico/Diccionario_Multiple_Estatico.iml" filepath="$PROJECT_DIR$/Codigo fuente profe/Diccionario_Multiple_Estatico/Diccionario_Multiple_Estatico.iml" />
+      <module fileurl="file://$PROJECT_DIR$/Codigo fuente profe/Diccionario_Simple_Estatico/Diccionario_Simple_Estatico.iml" filepath="$PROJECT_DIR$/Codigo fuente profe/Diccionario_Simple_Estatico/Diccionario_Simple_Estatico.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/MAGA-Meak-Argentina-great-again-.-Grupo-Programaci-n-ll.iml" filepath="$PROJECT_DIR$/.idea/MAGA-Meak-Argentina-great-again-.-Grupo-Programaci-n-ll.iml" />
+      <module fileurl="file://$PROJECT_DIR$/Codigo fuente profe/Pilas_estaticas/Pilas_estaticas.iml" filepath="$PROJECT_DIR$/Codigo fuente profe/Pilas_estaticas/Pilas_estaticas.iml" />
+      <module fileurl="file://$PROJECT_DIR$/ejercicios/ejercicios.iml" filepath="$PROJECT_DIR$/ejercicios/ejercicios.iml" />
+    </modules>
+  </component>
+</project>
