@@ -1,116 +1,138 @@
-## Pila(LIFO)
+## Bloque 1: Pilas, LIFO
 
-### 1. Ej: Historial de Navegacion
-Primero tenes que crear una pila, y luego la inicializas.\
-Cada vez ingresás una pagina, apilas la dicha pagina en la pila, asi haciendo que se guardo el historial en la pila.
-Ahi es donde se apila.
-```
-pila.Apilar("fi.uba.ar");  
-System.out.println(pila.Tope());  
-pila.Apilar("campus.utn.edu.ar ");  
-System.out.println(pila.Tope());  
+Una pila devuelve primero lo último que entró. Esa es la regla. Si en el parcial te olvidás de eso, se cae todo lo demás.
+
+### 1. Historial de navegación
+
+Cada página visitada se apila. El `Tope()` representa la página actual.
+
+```java
+pila.InicializarPila();
+
+pila.Apilar("fi.uba.ar");
+pila.Apilar("campus.utn.edu.ar");
 pila.Apilar("stackoverflow.com");
+
+System.out.println(pila.Tope()); // stackoverflow.com
 ```
-Si un usuario quiere apretar la flechita de "Atras", lo cual debe actúa como Desapilar():
-```
+
+Cuando el usuario toca "Atrás", se saca la página actual. Después el nuevo `Tope()` es la página anterior.
+
+```java
 pila.Desapilar();
-System.out.print(pila.Tope());
+System.out.println(pila.Tope()); // campus.utn.edu.ar
 ```
 
-### 2.Editor de Codigo (Undo/Deshacer)
-Usando unas dos pilas inicializadas, una auxiliar que va a ser usada para recuperar el estado anterior, y la otra original que apilas cada vez que el usuario hace un cambio.
-Primero creas una pila para guardar unos cambios, con el simple de InicializarPila(), Apilar(cambio).
-Y luego creas los siguientes metodos que sirviran para poder ver el historial y volver a los cambios.
+Pseudocódigo:
+
+```text
+entrar a una página -> Apilar(página)
+volver atrás -> Desapilar()
+página actual -> Tope()
 ```
-\\Este es la pila para volver atras. Asi es como recuperas al estado anterior, similar como el CTRL+Z
-while(!pilaTope.PilaVacia()) {
-    System.out.print("\n"+pilaTope.Tope());
-    pilaAtras.Apilar(pilaTope.Tope());
-    pilaTope.Desapilar();
+
+### 2. Editor de código, undo
+
+Para `Ctrl+Z`, conviene guardar estados del archivo. Cada cambio importante se apila.
+
+```text
+Apilar(estado_inicial)
+Apilar(estado_con_linea_1)
+Apilar(estado_con_linea_2)
+```
+
+Para deshacer, saco el estado actual y vuelvo al anterior.
+
+```java
+if (!historial.PilaVacia()) {
+    historial.Desapilar();
 }
-\\Asi es como volves a los cambios
-while(!pilaAtras.PilaVacia()) {
-    System.out.print("\n"+pilaAtras.Tope());
-    pilaTope.Apilar(pilaAtras.Tope());
-    pilaAtras.Desapilar();
-}
-```
 
-### 3.Balanceo de Parantesis
-Se apilara el valor que este dentro del parentesis, como por ejemplo;
-```
-((a+b)*2)
-Pila.Apilar("a+b")
-Pila.Apilar(*2)
-PILA: [a+b, *2]
-```
-
-### 4.Reversion de Strings
-Con el ayuda de value.charAt(i) y for.
-Cada caracter de la palabra, se va a apilar el caracter que este localizado.\
-Asi como tal se ve en el siguiente codigo.
-```
-String word = "ALGORITMOS";
-//Vamos a poner cada letra de ALGORITMOS en la pila
-for (int i = 0; i <= word.length()-1; i++) {
-    pila.Apilar(String.valueOf(word.charAt(i)));
-    System.out.print(pila.Tope()+"\n");
+if (!historial.PilaVacia()) {
+    estadoActual = historial.Tope();
 }
 ```
 
-Para imprimir la pila y asi haciendo como se vea el resultado. Haciendo que la palabra se lea al reves.
+Si también quiero rehacer, necesito otra pila para guardar lo que fui desapilando.
+
+### 3. Balanceo de paréntesis
+
+Acá no se apila `a+b`. Se apilan símbolos de apertura: `(`, `{`, `[`.
+
+Regla:
+
+```text
+si leo apertura -> Apilar(apertura)
+si leo cierre -> el Tope debe ser la apertura correspondiente, luego Desapilar()
+al final -> la pila debe quedar vacía
 ```
-while(!pila.PilaVacia()){
-    System.out.print(pila.Tope()+"\n");
+
+Ejemplo con `((a+b)*c)`:
+
+```text
+leo '(' -> Apilar('(')
+leo '(' -> Apilar('(')
+leo ')' -> Tope() es '(' -> Desapilar()
+leo ')' -> Tope() es '(' -> Desapilar()
+fin -> PilaVacia() == true
+```
+
+Si aparece un cierre y la pila está vacía, está mal. Si al final queda algo en la pila, también está mal.
+
+### 4. Reversión de strings
+
+Para invertir una palabra, apilo letra por letra y después desapilo.
+
+```java
+String palabra = "ALGORITMOS";
+
+for (int i = 0; i < palabra.length(); i++) {
+    pila.Apilar(String.valueOf(palabra.charAt(i)));
+}
+
+while (!pila.PilaVacia()) {
+    System.out.print(pila.Tope());
     pila.Desapilar();
-
-}
-```
-El resultado:
-```
-S
-O
-M
-T
-I
-R
-O
-G
-L
-A
-```
-### 5. Pila de Llamadas (Call Stack)
-Si bien vas a inicializar una pila que guardara las notas de los parciales, y con los metodos CalcularPromedio que llamará la Sumar().\
-Dentro del metodo de Suma, el tope va a ser la ultima nota que ingresaste. Y este tope va a ser usado como un elemento que sumará al total de las notas, asi haciendo que se acumule.\
-Asi como tal se muestra el codigo:
-```
-public static double Suma(PilaTDAI pila){
-    double aux = 0;
-    while(!pila.PilaVacia()){
-        aux+=pila.Tope();
-        pila.Desapilar();
-    }
-    return (aux);
 }
 ```
 
+Salida:
 
-### 6. Navegacion de Directorios
-Cada vez ingresas una carpeta, se apila la direccion en la pila ya inicializada, asi haciendo que se vean las carpetas.
-``` 
-Estrategia_1 pilaTope = new Estrategia_1();
-pilaTope.InicializarPila();
-pilaTope.Apilar("C://");
-pilaTope.Apilar("Usuarios/");
-pilaTope.Apilar("Documentos/");
+```text
+SOMTIROGLA
 ```
-Asi haciendo que la pila se vera como
-`C://Users/mdriv/OneDrive/Documentos`\
-Para saber a que carpeta volver si apretas a subir, es necesario usar la auxiliar pila o el auxiliar valor si en caso para leer que carpeta vas a volver atras\
+
+### 5. Pila de llamadas, call stack
+
+Si `Main()` llama a `CalcularPromedio()` y esa función llama a `Sumar()`, mientras se ejecuta `Sumar()` el tope conceptual de la pila es `Sumar()`.
+
+```text
+base -> Main -> CalcularPromedio -> Sumar -> tope
 ```
-String value=pilaTope.Tope();
-pilaTope.Desapilar();
-System.out.print("\n"+pilaTope.Tope()); // Se va a mostrar a que carpeta vas a volver.
-pilaTope.Apilar(value); // Asi haciendo que estes en la pagina.
+
+Cuando `Sumar()` termina, se desapila y vuelve el control a `CalcularPromedio()`.
+
+### 6. Navegación de directorios
+
+Cada carpeta visitada se apila.
+
+```java
+pila.Apilar("C:/");
+pila.Apilar("Usuarios");
+pila.Apilar("Documentos");
 ```
-Asi es como usas una pila para que el sistema sepa
+
+Estado:
+
+```text
+base -> C:/ -> Usuarios -> Documentos -> tope
+```
+
+Si el usuario sube un nivel:
+
+```java
+pila.Desapilar();
+System.out.println(pila.Tope()); // Usuarios
+```
+
+La pila sirve porque la carpeta anterior siempre queda justo debajo de la actual.

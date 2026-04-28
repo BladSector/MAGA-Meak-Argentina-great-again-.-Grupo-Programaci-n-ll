@@ -1,85 +1,114 @@
-# Clase 3 - Bloque 5
+# Clase 3, bloque 5
 
 ## 1. Hospital
 
-### Entidades
+Modelo:
 
-#### Paciente
-Es la entidad principal del sistema. Cada paciente tiene su propia pila de síntomas.
+```text
+Paciente:
+    legajo o id
+    pila de síntomas
+    prioridad calculada
 
-#### Pila de síntomas
-Guarda los síntomas del paciente en orden. Los más viejos quedan al fondo y el más reciente queda en el tope. Por eso, cuando se consulta la pila, lo primero que aparece es lo último que sintió el paciente.
+Guardia:
+    cola con prioridad de pacientes
+```
 
-#### Cola con prioridad
-Guarda a los pacientes en espera y los ordena según la prioridad con la que deben ser atendidos.
+La pila de síntomas guarda primero el síntoma más reciente en el tope.
 
-### Funcionamiento del sistema
+```text
+base -> fiebre -> tos -> dolor_pecho -> tope
+```
 
-Cuando llega un paciente al hospital, se lo debe encolar en la cola de prioridad.
+La cola con prioridad decide a quién se atiende antes. Si un paciente llega con prioridad más alta, queda antes que los de menor prioridad. Si tiene la misma prioridad que otro, se respeta el orden de llegada si la implementación mantiene FIFO en empates.
 
-Antes de encolarlo, primero hay que calcular su prioridad. Esa prioridad se obtiene a partir de sus síntomas, usando algo como `prioridad(paciente.getSintomas)`.
+Pseudocódigo:
 
-Una vez calculada, se revisa la cola actual. Si el nuevo paciente tiene una prioridad más alta que alguno de los pacientes que ya están esperando, se lo ubica delante de ese paciente. Pero también debe quedar detrás de cualquier otro que tenga una prioridad más alta que la suya.
+```text
+cuando llega un paciente:
+    prioridad = calcularPrioridad(paciente.sintomas)
+    cola.AcolarPrioridad(paciente, prioridad)
 
-Así, la cola queda ordenada según la urgencia de atención.
-
-### Cálculo de la prioridad
-
-La prioridad de un paciente se calcula a partir de su pila de síntomas.
-
-Como la pila mantiene el orden de aparición, el síntoma más reciente queda en el tope y los más viejos quedan más abajo.
-
-Para asignar la prioridad, se puede consultar una base de datos o una tabla donde figure cada síntoma y su nivel de gravedad.
-
-A partir de eso, se recorre la pila y se obtiene una prioridad final. En este planteo, esa prioridad sale del promedio de gravedad de los síntomas del paciente.
-
----
+cuando atiendo:
+    paciente = cola.Primero()
+    cola.Desacolar()
+```
 
 ## 2. Sistema de tags de facultad
 
-Este sistema se puede modelar con un diccionario. La clave es el nombre de una carrera y el valor asociado es un conjunto de materias obligatorias.
+Uso un diccionario donde:
 
-Por ejemplo, una clave puede ser `Licenciatura en Bioinformática` y su valor será el conjunto de materias obligatorias de esa carrera.
+```text
+clave: carrera
+valor: conjunto de materias obligatorias
+```
 
-El valor no conviene que sea una lista, sino un conjunto. La razón es simple: una misma materia no debería aparecer repetida, y además el orden no importa. Lo que interesa es saber si una materia pertenece o no a la carrera.
+Ejemplo:
 
-Cuando se registra una carrera en el sistema, se la guarda como clave del diccionario. Después se le asocia su conjunto de materias obligatorias. Con esa estructura se puede agregar una carrera, cargar sus materias, consultar cuáles son y verificar si una materia determinada pertenece a ese conjunto.
+```text
+"Licenciatura en Bioinformática" -> {Algoritmos, Matemática, Biología}
+```
 
-La relación principal del modelo es esa: a cada carrera le corresponde un conjunto de materias obligatorias.
+El valor tiene que ser conjunto porque una materia no debería repetirse y el orden no importa. Lo que interesa es poder preguntar si una materia pertenece a la carrera.
 
----
-
-## 3. Análisis de implementación de pilas
-
-Hay tres formas de implementar una pila con arreglos.
+## 3. Implementación de pilas con arreglos
 
 ### Estrategia 1
-Se usa un arreglo junto con una variable contador. Ese contador señala la primera posición libre del arreglo.
 
-Entonces, al apilar, el nuevo elemento se guarda en esa posición y el contador avanza. El tope queda justo antes de la primera posición libre.
+Arreglo más variable `cantidad`.
+
+```text
+cantidad apunta a la primera posición libre
+tope está en datos[cantidad - 1]
+```
+
+Apilar es directo:
+
+```text
+datos[cantidad] = x
+cantidad++
+```
+
+Costo: `O(1)`.
 
 ### Estrategia 2
-También se usa un arreglo, pero en este caso el tope de la pila siempre queda en la posición `0`.
 
-Eso obliga a mover todos los elementos una posición hacia la derecha cada vez que se apila uno nuevo. Recién después de ese desplazamiento se puede guardar el nuevo elemento en el índice `0`.
+El tope siempre queda en `datos[0]`.
+
+Para apilar hay que correr todo a la derecha y recién ahí poner el nuevo valor en `0`.
+
+```text
+antes: [7, 5, 3]
+apilo 9
+desplazo: [7, 7, 5, 3]
+pongo 9: [9, 7, 5, 3]
+```
+
+Costo: `O(n)`. Esta es la cara.
 
 ### Estrategia 3
-En esta estrategia, la posición `0` del arreglo no guarda un dato de la pila sino la cantidad de elementos que hay cargados.
 
-Los datos reales empiezan después. Esa cantidad se usa como referencia para saber dónde está el tope y dónde debe guardarse el siguiente elemento.
+`datos[0]` guarda la cantidad. Los datos reales empiezan en `datos[1]`.
 
-Las tres estrategias representan la misma pila, pero cambian la forma de organizar el arreglo y el costo de las operaciones.
+```text
+datos[0] = 3
+datos[1] = 5
+datos[2] = 8
+datos[3] = 2
+```
 
----
+El tope está en:
 
-## 4. Pregunta de parcial
+```text
+datos[datos[0]]
+```
 
-### ¿Cuál de las estrategias es la más ineficiente para apilar y por qué?
+Costo de apilar: `O(1)`.
 
-La estrategia que termina siendo más pesada al momento de apilar es la Estrategia 2.
+## 4. Pregunta típica de parcial
 
-El motivo es que esa implementación mantiene el tope siempre en la posición `0`. Entonces, cuando entra un elemento nuevo, no se lo puede guardar directamente: antes hay que correr todos los elementos que ya estaban cargados una posición hacia la derecha.
+La estrategia más ineficiente para `Apilar` es la estrategia 2.
 
-Si la pila tiene muchos elementos, ese corrimiento hay que hacerlo completo en cada inserción. Por eso apilar en esta estrategia tiene costo **O(n)**.
+Motivo: mantiene el tope en el índice `0`, entonces cada nuevo elemento obliga a desplazar todos los elementos cargados una posición a la derecha. Si hay `n` elementos, mueve `n` elementos. Por eso cuesta `O(n)`.
 
-En cambio, en la Estrategia 1 el elemento se agrega en la próxima posición libre del arreglo usando el contador, sin mover lo anterior. Por eso ahí el costo de apilar es **O(1)**.
+En las estrategias 1 y 3 se agrega directo en la próxima posición libre. Ahí el costo es `O(1)`.

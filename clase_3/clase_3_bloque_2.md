@@ -1,86 +1,100 @@
-Bloque 2: Colas y Colas con Prioridad (FIFO + Ranking) 
+# Bloque 2: Colas y colas con prioridad
 
+Cola común: FIFO. El primero que llega es el primero que sale.
 
+Cola con prioridad: sale primero el de mayor prioridad. Si dos tienen la misma prioridad, se suele respetar el orden de llegada dentro de esa prioridad.
 
-**Fila del Cajero: Los clientes llegan al banco de la esquina de la facultad** 
+## Fila del cajero
 
+Es una cola común. No hay privilegios ni ranking: el cliente que llega primero se atiende primero.
 
+```text
+Acolar(cliente)
+Desacolar() cuando pasa a la caja
+```
 
-\- Consigna: ¿Es la Cola común o de Prioridad? Justifica según la lógica de atención. 
+## Impresora del laboratorio
 
-&#x09;Es una cola común (FIFO) ya que los clientes que van llegando se ordenan en orden de llegada desde la esquina de la facultad. No es prioritario porque no hay una condición sobre 	privilegio de adelanto a la cola. 
+También es una cola común. Si entran cinco archivos, salen en el orden en que fueron recibidos por la impresora.
 
+```text
+archivo1, archivo2, archivo3, archivo4, archivo5
+```
 
+Salida:
 
-**Impresora del Laboratorio: Todos mandan el TP al mismo tiempo para que no cierre la entrega.** 
+```text
+archivo1, archivo2, archivo3, archivo4, archivo5
+```
 
+## Guardia del hospital, triage
 
+Es cola con prioridad. No gana el que llegó primero, gana el caso más urgente.
 
-\- Consigna: Si la impresora recibe 5 archivos, ¿Cuál es el orden de salida? 
+Ejemplo:
 
-&#x09;Usa cola FIFO porque la maquina al recibir los TP le da un orden de llegada, aunque sea de milisegundos. 
+```text
+raspón -> prioridad 1
+fractura -> prioridad 50
+infarto -> prioridad 100
+```
 
+Si el raspón llegó antes que el infarto, igual se atiende primero el infarto.
 
+## Promocionados vs regulares
 
-**Guardia del Hospital de Clínicas (Triage): Llega un pibe con un rapón (prioridad 1) y un jubilado con un bobazo (prioridad 100).** 
+Datos:
 
+```text
+regular llega 8:00 -> prioridad 5
+promocionado llega 8:30 -> prioridad 10
+```
 
+Sale primero el promocionado, porque tiene mayor prioridad.
 
-\- Consigna: Definí los valores de prioridad para 3 casos distintos de tu elección. 
+## Buffet de la facultad
 
-&#x09;Para poner ejemplos de prioridad se puede mencionar el 	engripado (Prioridad 20), esguince (Prioridad 30) y fractura 	(Prioridad 50). 
+Para que nadie se meta en la fila, uso una cola común.
 
+```text
+cuando llega una persona -> Acolar(persona)
+cuando atienden -> Desacolar()
+```
 
+La operación que cuida el orden es `Desacolar()`, porque siempre saca al primero de la cola.
 
-**Examen Final (Promocionados vs Regulares): En la cartelera se anotan todos. Pero los que promocionaron (Prioridad 10) pasan antes que los que rinden final (Prioridad 5).** 
+## Scheduler del sistema operativo
 
+Conviene modelarlo como cola con prioridad.
 
+```text
+proceso del sistema -> prioridad 50
+audio -> prioridad 45
+video -> prioridad 40
+Spotify -> prioridad 10
+```
 
-\- Consigna: Si un regular llegó a las 8 AM y un promocionado a las 8:30 AM ¿Quién sale primero al hacer desacolar? 
+Si el sistema se sobrecarga, los procesos de baja prioridad esperan más. Los del sistema siguen saliendo antes porque no conviene bloquearlos.
 
-&#x09;Acá se usa cola por prioridad, no importa el tiempo de 	llegada. Al desacolar lo hace primero el de mayor prioridad, 	en este caso el promocionado de las 8:30 AM 
+## Embarque de aerolíneas
 
+Modelo:
 
+```text
+movilidad reducida -> prioridad 3
+business -> prioridad 2
+general -> prioridad 1
+```
 
-**Buffet de la Facultas: Fila para el sanguchito de milanesa.** 
+Si llegan dos personas con la misma prioridad, se atienden por orden de llegada dentro de esa subcola.
 
+## Tickets IT
 
+Modelo:
 
-\- Consigna: ¿Qué operación de TDA Cola usas para asegurar que no se cuelen ningún “vibe coder”? 
+```text
+servidor principal caído -> prioridad 999
+fondo de pantalla feo -> prioridad 0
+```
 
-&#x09;Usaría una cola con FIFO, el primero que entra es el primero 	en salir, no hay posibilidades de colarse. Al descolar siempre 	va a ser el primero que entro. 
-
-
-
-**Procesador de Tareas (OS Scheduler): El sistema operativo maneja procesos del sistema (Prioridad 50) y procesos del usuario como el Spotify (Prioridad 10).** 
-
-
-
-\- Consigna: Asignar prioridades y explicar qué pasa si el sistema se sobrecarga. 
-
-&#x09;Algunas prioridades puede ser el proceso de sonido (Prioridad 	45) y proceso de imagen (Prioridad 48). En una situación de 	sobrecarga, el sistema no deja de ejecutar los procesos 	más importantes, sino que comienza a postergar los de menor 	prioridad. Primero se ven afectados los procesos del usuario, 	que pueden quedar en espera durante más tiempo. Si la 	sobrecarga continúa, también se reduce la ejecución del sonido 	y, en última instancia, del video. 
-
-
-
-**Embarque de Aerolíneas: Primero suben pasajeros con movilidad reducida (prioridad 3), luego business (prioridad 2) y al final los mortales (prioridad 1).** 
-
-
-
-\- Consigna: Identificar el comportamiento si llegan dos personas con la misma prioridad. 
-
-&#x09;Al llegar al mismo tiempo dos personas con la misma prioridad 	pasa a funcionar como una cola común (FIFO), el que llega 	primero es el que sube. 
-
-
-
-**Distribución de Tickets IT: Se rompió el servidor principal (prioridad infinita) vs “No me gusta el fondo de pantalla” (prioridad 0)** 
-
-
-
-\- Consigna: Definí explícitamente el valor de prioridad para cada caso. 
-
-&#x09;Lo principal es el funcionamiento continuo o reparación del 	servidor principal ante cualquier complicación que surge, por 	ningún motivo se debe realizar o procesar otra tarea si 	aparece el servidor principal (prioridad “infinito y más 	allá”). Cambiar el fondo de pantalla del escritorio es la 	menor prioridad de todas (prioridad “cuando no tengas nada que 	hacer”), recién se puede prestar atención a ese proceso cuando 	ningún otro proceso este a la espera, tienen que estar 	resueltos todo lo demás para poder poner fachera el fondo de 	pantalla. 
-
-
-
-&#x20;
-
+El servidor caído sale primero aunque el otro ticket haya llegado antes.

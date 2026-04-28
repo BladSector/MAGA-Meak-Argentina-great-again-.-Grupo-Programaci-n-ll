@@ -13,12 +13,14 @@ Ej 1. formato: output, datos[0], base→v1→v2→...→tope
 (g): 5, 5, base→5→12→3→9→6→tope
 (h): 7, 7, base→5→12→3→9→6→4→7→tope
 
-Ej 2. Lo que hace metodoV() es ir iterando sobre la pila y sumando a cada iteracion el valor de la posicion que estaba iterando. Es asi como termina con un return suma que nos devolvera el valor sumado de todos los elementos de la pila. La pila no queda modificada al terminar porque durante esta iteracion se va guardando en una pila auxiliar, que tras terminar la iteracion vuelva a la pila original a su estado con el que comenzo la funcion. El valor correcto que retorna es 35, ya que es la suma de todos sus valores, 5+12+3+9+6=35.
+Ej 2. `metodoV()` suma todos los elementos de la pila. Para recorrerla, va sacando el tope y guardándolo en una pila auxiliar. Después devuelve los elementos desde la auxiliar a la pila original. La pila queda igual que antes de llamar al método. Para el estado del inciso (d), retorna 35 porque 5+12+3+9+6=35.
 
-Ej 3. Tanto el metodo Apilar() como Desapilar() verifican que PilaLlena() y PilaVacia() sean diferente de true, es decir que sean false, por ende que no este ni llena ni vacia respectivamente. Si se intenta Apilar con la pila llena, PilaLlena() da true, entonces !PilaLlena() da false y no se ejecuta el cuerpo del if, la pila queda igual y no se agrega el elemento; si se intenta Desapilar con la pila vacía, PilaVacia() da true, entonces !PilaVacia() da false y no se decrementa datos[0], la pila queda igual.
+Ej 3. Si se intenta `Apilar()` con la pila llena, `PilaLlena()` da true, entonces `!PilaLlena()` da false y no entra al `if`. La pila queda igual. Si se intenta `Desapilar()` con la pila vacía, `PilaVacia()` da true, entonces `!PilaVacia()` da false y no se decrementa `datos[0]`. También queda igual.
 
 
-Ej 4. En la implementación estática la pila se guarda en un arreglo de tamaño fijo. datos[0] indica la cantidad de elementos y el tope está en datos[datos[0]]. Su ventaja es que es simple y el acceso al tope es directo. Su desventaja es que tiene una capacidad máxima fija: si se llena, no se pueden apilar más elementos. En la implementación dinámica la pila se guarda con nodos enlazados, donde cada nodo contiene un valor y una referencia al siguiente. El tope suele estar referenciado por un puntero o nodo inicial. Su ventaja es que no necesita definir un tamaño máximo fijo y puede crecer mientras haya memoria. Su desventaja es que usa más memoria por los enlaces y es más compleja de implementar.
+Ej 4. Implementación estática: usa un arreglo de tamaño fijo. En esta versión, `datos[0]` guarda la cantidad y el tope está en `datos[datos[0]]`. Ventaja: es simple y el acceso al tope es directo. Desventaja: tiene capacidad máxima.
+
+Implementación dinámica: usa nodos enlazados. Cada nodo guarda el valor y una referencia al siguiente. Ventaja: puede crecer mientras haya memoria. Desventaja: usa memoria extra por los enlaces y hay que manejar referencias.
 
 
 ▸ Estado de una COLA
@@ -28,50 +30,60 @@ Ej 5. formato: output, Primero(), Primero→v1→v2→...→último
 
 (a): 4, 4, Primero→4→9→2→7→5→último
 (b): 2, 2, Primero→2→7→5→11→3→último
-(c): true, null, Primero→vacia→último
-(d): null, null, Primero→vacia→último
-(e): 8, 8, Primero→8→último
+(c): true, Primero→vacia→último
+(d): error / operación no definida sobre cola vacía, Primero→vacia→último
+(e): 8, Primero→8→último, si se toma `c.Acolar(8)` como instrucción ejecutable después de (d)
 
 Ej 6. formato: output, datos[0], {v1, v2, ...}
 
 (a): true, 5, {3,7,1,5,9}
 (b): false, 5, {3,7,1,5,9}
-(c): false, 5, {3,7,5,9,4}
-(d): false, 5, {3,7,5,9,4}
-(e): true, 5, {3,7,5,9,4}
-(f): 6, 6, {3,7,5,9,4,2}
-(g): 6, 6, {3,7,5,9,4,2}
+(c): false, 5, {3,7,9,5,4}
+(d): false, 5, {3,7,9,5,4}
+(e): true, 5, {3,7,9,5,4}
+(f): 6, 6, {3,7,9,5,4,2}
+(g): 6, 6, {3,7,9,5,4,2}
 
-Agregar(int x) {
-if (!ConjuntoLleno() && !Pertenece(x))
+Fragmento clave:
 
-Ej 7. No podremos agregar nada al conjunto, si este esta lleno y si el item que queremos agregar ya partenece al conjunto. Esto es asi porque la funcion agregar() tiene un condicional if que verificara que las funciones ConjuntoLleno() y Pertenece(x) sean false. De ambas no ser false, entonces no agregara el valor y el conjunto no cambiara.
+```java
+void Agregar(int x) {
+    if (!ConjuntoLleno() && !Pertenece(x)) {
+        datos[0]++;
+        datos[datos[0]] = x;
+    }
+}
+```
+
+Ej 7. `Agregar(x)` no agrega nada si el conjunto está lleno o si `x` ya pertenece al conjunto. El `if` exige dos cosas al mismo tiempo: `!ConjuntoLleno()` y `!Pertenece(x)`. Si alguna falla, el conjunto queda igual.
 
 Ej 8.
 
 cola = Primero→1→2→3→4→5→último
 conjunto = {2,3,4}
 
+```java
 static void eliminarDeColaLosElementosPresentesEnConjunto(ColaTDA cola, ConjuntoTDA conjunto) {
 
-    ColaTDA colaAux = new ColaTDA(); 
+    ColaTDA colaAux = new ColaDinamica();
     colaAux.InicializarCola();
 
-    while ( cola.ColaVacia() == false ) {
-        int elementoAMoverAColaAUX = cola.Primero();
+    while (cola.ColaVacia() == false) {
+        int elemento = cola.Primero();
         cola.Desacolar();
 
-        if ( conjunto.Pertenece ( elementoAMoverAColaAUX ) == false ) {
-            colaAux.Acolar( elementoAMoverAColaAUX );
+        if (conjunto.Pertenece(elemento) == false) {
+            colaAux.Acolar(elemento);
         }
     }
 
-    while ( colaAux.ColaVacia() == false ) {
-        int elementoAMoverAColaOriginal = colaAux.Primero();
+    while (colaAux.ColaVacia() == false) {
+        int elemento = colaAux.Primero();
         colaAux.Desacolar();
-        cola.Acolar( elementoAMoverAColaOriginal );
+        cola.Acolar(elemento);
     }
 }
+```
 
 Ej 9. formato: output, Subcola P=0: [...] | Subcola P=1: [...] | Subcola P=2: [...]
 
@@ -84,15 +96,16 @@ Ej 9. formato: output, Subcola P=0: [...] | Subcola P=1: [...] | Subcola P=2: [.
 (g): false, Subcola P=0: [7, 3] | Subcola P=1: [6, 9] | Subcola P=2: [13, 1]
 (h): 7, Subcola P=0: [7, 3, 8] | Subcola P=1: [6, 9] | Subcola P=2: [13, 1]
 
-Ej 10. En una Cola simple los elementos se atienden únicamente por orden de llegada: el primero que entra es el primero que sale. Es decir, sigue la regla FIFO directamente sobre una sola cola. En una Cola con Prioridad, cada elemento tiene asociada una prioridad. La estructura no atiende necesariamente al elemento que llegó primero en general, sino al primer elemento de la subcola no vacía con mayor prioridad. Dentro de una misma prioridad sí se respeta FIFO. La diferencia en Desacolar es que en una Cola simple se elimina siempre el primer elemento de la cola. En una Cola con Prioridad, Desacolar primero busca desde la prioridad más alta hacia la más baja, y elimina el primero de la primera subcola no vacía.
+Ej 10. Cola simple: sale por orden de llegada, FIFO global. Cola con prioridad: sale primero la prioridad más alta. Dentro de una misma prioridad se respeta FIFO si la implementación lo define así. En una cola simple, `Desacolar()` elimina siempre el primer elemento. En una cola con prioridad, `Desacolar()` busca primero la subcola de mayor prioridad no vacía y saca el primero de esa subcola.
 
 Ej 11. 
 
+```java
 static ColaPrioTDA combinarColasConPrioridad(ColaPrioTDA CP1, ColaPrioTDA CP2) {
-    ColaPrioTDA CP3 = new ColaPrioTDA();
+    ColaPrioTDA CP3 = new ColaPrioTDA(); // usar la implementación concreta del enunciado
     CP3.InicializarCola();
 
-    ColaPrioTDA CPAux = new ColaPrioTDA();
+    ColaPrioTDA CPAux = new ColaPrioTDA(); // auxiliar del mismo TDA
     CPAux.InicializarCola();
 
     while (CP1.ColaVacia() == false) {
@@ -135,6 +148,7 @@ static ColaPrioTDA combinarColasConPrioridad(ColaPrioTDA CP1, ColaPrioTDA CP2) {
 
     return CP3;
 }
+```
 
 Ej 12. formato: output, {clave→valor, ...}
 
@@ -156,19 +170,22 @@ Ej 13. formato: output, {clave→{valores}, ...}
 (f): {10, 15, 8}, {2→{10, 15, 8}, 4→{7, 12}}
 (g): {10, 15, 8}, {2→{10, 15, 8}, 4→{7, 12}}
 
-Ej 14. La diferencia conceptual entre un Diccionario Simple y un Diccionario Múltiple es que en el Diccionario Simple cada clave tiene asociado un único valor, mientras que en el Diccionario Múltiple cada clave puede tener asociado un conjunto de valores. Si se llama a Agregar con una clave que ya existe en un Diccionario Simple, el valor anterior de esa clave se reemplaza por el nuevo valor. Si se llama a Agregar con una clave que ya existe en un Diccionario Múltiple, el nuevo valor se agrega al conjunto de valores asociado a esa clave. Si ese valor ya estaba en el conjunto, no se duplica.
+Ej 14. Diccionario Simple: una clave tiene un único valor. Si llamo `Agregar` con una clave existente, reemplaza el valor anterior. Diccionario Múltiple: una clave tiene un conjunto de valores. Si llamo `Agregar` con una clave existente, agrega el valor al conjunto. Si ese valor ya estaba, no lo duplica.
 
 Ej 15.
 
+```java
 static void frecuencias(PilaTDA p, DicSimpleTDA d) {
-    PilaTDA pilaAux = new PilaTDA();
+    d.InicializarDiccionario();
+
+    PilaTDA pilaAux = new PilaDinamica();
     pilaAux.InicializarPila();
 
     while (p.PilaVacia() == false) {
         int elementoActual = p.Tope();
         p.Desapilar();
 
-        ConjuntoTDA clavesDiccionario = d.Claves();
+        ConjuntoTDA clavesDiccionario = d.Claves(); // según el parcial, Claves() se usa como conjunto
 
         if (clavesDiccionario.Pertenece(elementoActual) == false) {
             d.Agregar(elementoActual, 1);
@@ -187,9 +204,11 @@ static void frecuencias(PilaTDA p, DicSimpleTDA d) {
         p.Apilar(elementoADevolver);
     }
 }
+```
 
 Ej 16.
 
+```java
 static void invertir(DicSimpleTDA d, DicMultipleTDA dm) {
     dm.InicializarDiccionario();
 
@@ -204,4 +223,4 @@ static void invertir(DicSimpleTDA d, DicMultipleTDA dm) {
         dm.Agregar(valorDiccionarioSimple, claveDiccionarioSimple);
     }
 }
-
+```

@@ -1,38 +1,72 @@
-**BLOQUE 3**
+# Bloque 3: Conjuntos
 
+Un conjunto no admite repetidos. El orden no importa.
 
+## Padrón electoral
 
-**Padron electoral**
+Guardo en un conjunto los legajos que ya votaron.
 
-Para evitar que un "vivo" vote 2 veces, podemos usar un conjunto de votos donde se guarde el legajo del estudiante que voto. Cada vez que un estudiante intente agregar un voto (a partir del metodo Agregar), debe validarse previamente si ese estudiante ya voto, usando el metodo Pertenece para verificar que el estudiante no este en el conjunto.
+```text
+si votantes.Pertenece(legajo):
+    no puede votar otra vez
+si no:
+    vota
+    votantes.Agregar(legajo)
+```
 
+La operación que evita el doble voto es `Pertenece`.
 
+## Invitados a la fiesta
 
-**Invitados a la fiesta de fin de cursada**
+Si intento agregar a alguien que ya está, el conjunto queda igual. El tamaño no cambia.
 
-Si se intenta agregar a alguien al conjunto de invitados a la fiesta que ya esta en la lista, el tamano de la misma no varia ya que los conjuntos no permiten duplicados.
+```text
+invitados = {Ana, Juan}
+Agregar(Juan)
+invitados = {Ana, Juan}
+```
 
+## Filtro de spam
 
+La blacklist puede ser un conjunto de palabras prohibidas.
 
-**Filtro de Spam (Blacklist)**
+```text
+blacklist = {"crypto", "premio", "ganá"}
+```
 
-Para verificar si un mail entrante tiene una palabra prohibida deneriamos recorrer el mail y preguntar palabra por palabra si pertenece al conjunto Blacklist.
+Para revisar un mail, recorro sus palabras y pregunto:
 
+```java
+if (blacklist.Pertenece(palabra)) {
+    esSpam = true;
+}
+```
 
+## Tags de un blog
 
-**Tags de un Blog de ingenieria**
+Uso conjunto porque no quiero repetir tags y no me importa cuál fue cargado primero.
 
-En este caso se usa un conjunto y no una pila ya que no nos interesa el orden de los elementos, y tampoco tiene sentido guardar elementos duplicados.
+```text
+{Programacion, Java, OOP}
+```
 
+Una pila sería mala elección porque una pila habla de orden de salida, no de pertenencia.
 
+## Gestión de legajos
 
-**Gestion de legajos**
+El legajo debería ser único. Antes de cargar un alumno, pregunto si ya está.
 
-Para asegurarse que el Sistema no duplique el ID de un estudiante que se anota a dos carreras diferentes, se deberia guardar en un conjunto el ID de los estudiantes. Entonces cada vez que un estudiante se anota a una Carrera, su ID se agrega al conjunto siempre y cuando no pertenezca al mismo previamente (metodo Pertenece)
+```text
+si alumnos.Pertenece(legajo):
+    no agrego
+si no:
+    alumnos.Agregar(legajo)
+```
 
+## Elegir vs Sacar
 
+`Elegir()` devuelve un elemento del conjunto, pero no lo elimina.
 
-**Operacion Elegir vs Sacar**
+`Sacar(x)` elimina `x` si está.
 
-En la teoria, el metodo Elegir devuelve un elemento cualquiera que pertenezca al conjunto, por lo tanto no hay ninguna garantia de que el metodo devuelva siempre el mismo elemento ya que puede devolver cualquiera que pertenezca al conjunto. Sin embargo, la respuesta a esta pregunta va a depender de la implementacion interna del conjunto, ya que si el mismo usa una lista enlazada internamente lo mas probable es que siempre te devuelva el primer nodo de la lista, mientras que con otras implementaciones el elemento a devolver puede ser diferente en cada llamada.
-
+Si llamo `Elegir()` dos veces seguidas sin `Sacar()`, desde la teoría no tengo que asumir nada sobre el orden. En una implementación concreta puede devolver siempre el primer elemento interno, pero el TDA no promete eso.
