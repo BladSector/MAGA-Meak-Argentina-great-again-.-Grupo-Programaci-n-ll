@@ -1,0 +1,64 @@
+Ej 1. formato: output, datos[0], base→v1→v2→...→tope
+
+(a): 4, 5, base→3→8→1→6→4→tope
+(b): 5, 5, base→3→8→1→6→4→tope
+(c): 7, 4, base→3→8→1→7→tope
+(d): false, 4, base→3→8→1→7→tope
+(e): true, 0, base→vacio→tope
+(f): 5, 1, base→5→tope
+
+Ej 2. La diferencia entre cada una refiere a como se ingresan y extraen los elementos entre ellas. Mientras que, las pilas siguen 'LIFO: ultimo en entrar, primero en salir', las colas siguen 'FIFO: primero en entrar, primero en salir'.
+
+Ej 3. Si se intenta `Apilar()` con la pila llena, no se podra. Esto debido a que, `PilaLlena()` da true, entonces `!PilaLlena()` da false y no entra al condicional `if`, por lo tanto, la pila queda igual. 
+      Si se intenta `Desapilar()` con la pila vacía, tampoco se podra. Por lo que, `PilaVacia()` da true, entonces `!PilaVacia()` da false y nuevamente no entra al condicion, por ello no se decrementa `datos[0]`, por ende, también quedara igual.
+
+Ej 4. 
+
+######################################################################################################################################################
+
+Ej 5. formato: output, ini=valor, fin=valor, primero→valor→ultimo
+
+(a): 5, ini=5, fin=8, primero→5,11,2,8→ultimo
+(b): 2, ini=2, fin=3, primero→2,8,14,3→ultimo
+(c): 8, ini=8, fin=3, primero→8,14,3→ultimo
+(d): true, ini=8, fin=9, primero→8,14,3,9,6→ultimo
+(d): false, ini=8, fin=9, primero→8,14,3,9,6→ultimo
+
+---
+
+Ej 9. formato: output, Subcola P=0: [...] | Subcola P=1: [...] | Subcola P=2: [...]
+
+(a): 3, Subcola P=0: [3,7,6] | Subcola P=1: [5,2] | Subcola P=2: [9,4]
+(b): 0, Subcola P=0: [3,7,6] | Subcola P=1: [5,2] | Subcola P=2: [9,4]
+(c): 5, Subcola P=0: vacia | Subcola P=1: [5,2] | Subcola P=2: [9,4]
+(d): 1, Subcola P=0: vacia | Subcola P=1: [5,2] | Subcola P=2: [9,4]
+(e): 8, Subcola P=0: [8] | Subcola P=1: [5,2] | Subcola P=2: [9,4]
+(f): 0, Subcola P=0: [8] | Subcola P=1: [5,2] | Subcola P=2: [9,4]
+(g): false, Subcola P=0: vacia | Subcola P=1: vacia | Subcola P=2: [4]
+(h): 1, Subcola P=0: vacia | Subcola P=1: [1] | Subcola P=2: [4]
+
+Ej 10. Cola simple: sale por orden de llegada, FIFO global. Cola con prioridad: sale primero la prioridad más alta. Dentro de una misma prioridad se respeta FIFO si la implementación lo define así. En una cola simple, `Desacolar()` elimina siempre el primer elemento. En una cola con prioridad, `Desacolar()` busca primero la subcola de mayor prioridad no vacía y saca el primero de esa subcola.
+
+Ej 11.
+
+######################################################################################################################################################
+
+Ej 12. formato: output, {v1, v2, ...}
+
+(a): true, {4,9,2,7}
+(b): false, {4,9,2,7}
+(c): 4, {4,9,2,7}
+(d): false, {4,9,7,5}
+(e): true, {4,9,7,5}
+(f): 5, {4,9,7,5,6}
+(g): 5, {4,9,7,5,6}
+
+Ej 13. `Agregar(x)` no agrega nada si el conjunto está lleno o si `x` ya pertenece al conjunto. El condicional `if` chequea dos cosas al mismo tiempo: `!ConjuntoLleno()`, es decir que el conjunto no este lleno, y `!Pertenece(x)`, siendo esto que, 'x' no este presente en el conjunto. Si alguna de esas condiciones falla, el conjunto queda igual.
+
+Ej 14.
+
+---
+
+Ej 15. Podemos hablar de dos diferencias importante: 
+    * La primera siendo que la en la pila uno puede agregar el mismo valor mas de una vez. Esto no pasa asi en el conjunto, ya 'Agregar(x)' tiene como condicion `!Pertenece(x)`, siendo esto que, 'x' no este presente en el conjunto.
+    * La segunda diferencia refiere a que en el conjunto la posicion de los elementos no nos es relevante. Mientras que, la posicion en que fueron apilados sus elementos si nos es relevante, ya que 'Desapilar()' siempre desapilara al ultimo elemento que entro en la pila.
